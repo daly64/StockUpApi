@@ -48,8 +48,8 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteProduct(@RequestBody Product product) {
-        return productService.deleteProduct(product);
+    public ResponseEntity<String> deleteProduct(@RequestParam String id) {
+        return productService.deleteProduct(id);
     }
 
 }

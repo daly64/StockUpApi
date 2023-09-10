@@ -60,8 +60,8 @@ public class ProductService {
     }
 
 
-    public ResponseEntity<String> deleteProduct(Product product) {
-        Optional<Product> toDeleteProduct = productRepository.findById(product.getId());
+    public ResponseEntity<String> deleteProduct(String id) {
+        Optional<Product> toDeleteProduct = productRepository.findById(id);
 
         if (toDeleteProduct.isPresent()) {
             productRepository.delete(toDeleteProduct.get());
@@ -74,17 +74,11 @@ public class ProductService {
 
         Optional<Product> product = productRepository.findByName(name);
 
-
         return product.map(p -> ResponseEntity
                 .ok()
                 .contentType(MediaType.valueOf(p.getPhotoType()))
                 .body(ImageUtility.decompressImage(p.getPhoto()))
         ).orElse(null);
-
-/*        return dbImage.map(image -> ResponseEntity
-                .ok()
-                .contentType(MediaType.valueOf(image.getType()))
-                .body(ImageUtility.decompressImage(image.getImage()))).orElse(null);*/
 
     }
 }
