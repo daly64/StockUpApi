@@ -13,8 +13,7 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
-    final
-    ProductRepository productRepository;
+    final ProductRepository productRepository;
 
     @Autowired
     public ProductService(ProductRepository productRepository) {
@@ -31,24 +30,24 @@ public class ProductService {
 
     public ResponseEntity<String> addProduct(Product product) {
         productRepository.save(product);
-        return new ResponseEntity<>("Product " + product.getName() + " created successfully ", HttpStatus.OK);
+        return new ResponseEntity<>("Product created successfully ", HttpStatus.OK);
     }
 
     public ResponseEntity<String> updateProduct(Product product) {
         Optional<Product> toUpdateProduct = productRepository.findById(product.getId());
+
         if (toUpdateProduct.isPresent()) {
             Product updatedProduct = toUpdateProduct.get();
 
             updatedProduct.setName(product.getName());
+
             productRepository.save(updatedProduct);
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body("Product " + updatedProduct.getName() + " updated successfully ");
+            return new ResponseEntity<>("Product updated successfully ", HttpStatus.OK);
+
         }
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body("no product to update ");
+        return new ResponseEntity<>("no product to update ", HttpStatus.NOT_FOUND);
+
     }
 
 
@@ -57,12 +56,8 @@ public class ProductService {
 
         if (toDeleteProduct.isPresent()) {
             productRepository.delete(toDeleteProduct.get());
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body("Product " + toDeleteProduct.get().getName() + " deleted successfully ");
+            return new ResponseEntity<>("Product deleted successfully ", HttpStatus.OK);
         }
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body("no product to delete ");
+        return  new ResponseEntity<>("no product to delete", HttpStatus.NOT_FOUND);
     }
 }
