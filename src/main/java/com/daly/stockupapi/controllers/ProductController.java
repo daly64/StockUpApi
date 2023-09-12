@@ -32,30 +32,19 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
-    @GetMapping(path = {"/image/{name}"})
+    @GetMapping(path = {"/photo/{name}"})
     public ResponseEntity<byte[]> getProductImage(@PathVariable String name) {
-        return productService.getProductImage(name);
+        return productService.getProductPhoto(name);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addProduct(
-            @RequestParam String name,
-            @RequestParam MultipartFile image,
-            @RequestParam double price,
-            @RequestParam int quantity
-    ) throws IOException {
-        return productService.addProduct(name, image, price, quantity);
+    public ResponseEntity<String> addProduct(@RequestParam String name, @RequestParam MultipartFile photo, @RequestParam double price, @RequestParam int quantity) throws IOException {
+        return productService.addProduct(name, photo, price, quantity);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateProduct(
-            @RequestParam String id,
-            @RequestParam String name,
-            @RequestParam MultipartFile image,
-            @RequestParam double price,
-            @RequestParam int quantity
-    ) throws IOException {
-        return productService.updateProduct(id, name, image, price, quantity);
+    public ResponseEntity<String> updateProduct(@RequestParam String id, @RequestParam String name, @RequestParam MultipartFile photo, @RequestParam double price, @RequestParam int quantity) throws IOException {
+        return productService.updateProduct(id, name, photo, price, quantity);
     }
 
     @DeleteMapping("/delete")

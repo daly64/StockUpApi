@@ -32,19 +32,19 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public ResponseEntity<String> addProduct(String name, MultipartFile image, double price, int quantity) throws IOException {
+    public ResponseEntity<String> addProduct(String name, MultipartFile photo, double price, int quantity) throws IOException {
         Product newProduct = Product.builder()
                 .name(name)
                 .price(price)
                 .quantity(quantity)
-                .image(ImageUtility.compressImage(image.getBytes()))
-                .imageType(image.getContentType())
+                .photo(ImageUtility.compressImage(photo.getBytes()))
+                .photoType(photo.getContentType())
                 .build();
         productRepository.save(newProduct);
         return new ResponseEntity<>("Product created successfully ", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> updateProduct(String id, String name, MultipartFile image, double price, int quantity) throws IOException {
+    public ResponseEntity<String> updateProduct(String id, String name, MultipartFile photo, double price, int quantity) throws IOException {
         Optional<Product> toUpdateProduct = productRepository.findById(id);
 
         if (toUpdateProduct.isPresent()) {
@@ -52,7 +52,7 @@ public class ProductService {
             updatedProduct.setName(name);
             updatedProduct.setPrice(price);
             updatedProduct.setQuantity(quantity);
-            updatedProduct.setImage(ImageUtility.compressImage(image.getBytes()));
+            updatedProduct.setPhoto(ImageUtility.compressImage(photo.getBytes()));
 
             productRepository.save(updatedProduct);
 
@@ -74,14 +74,14 @@ public class ProductService {
         return new ResponseEntity<>("no product to delete", HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<byte[]> getProductImage(String name) {
+    public ResponseEntity<byte[]> getProductPhoto(String name) {
 
         Optional<Product> product = productRepository.findByName(name);
 
         return product.map(p -> ResponseEntity
                 .ok()
-                .contentType(MediaType.valueOf(p.getImageType()))
-                .body(ImageUtility.decompressImage(p.getImage()))
+                .contentType(MediaType.valueOf(p.getPhotoType()))
+                .body(ImageUtility.decompressImage(p.getPhoto()))
         ).orElse(null);
 
     }
