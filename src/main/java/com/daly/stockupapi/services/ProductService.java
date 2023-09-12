@@ -32,23 +32,27 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public ResponseEntity<String> addProduct(String name, MultipartFile photo) throws IOException {
+    public ResponseEntity<String> addProduct(String name, MultipartFile image, double price, int quantity) throws IOException {
         Product newProduct = Product.builder()
                 .name(name)
-                .photo(ImageUtility.compressImage(photo.getBytes()))
-                .photoType(photo.getContentType())
+                .price(price)
+                .quantity(quantity)
+                .image(ImageUtility.compressImage(image.getBytes()))
+                .imageType(image.getContentType())
                 .build();
         productRepository.save(newProduct);
         return new ResponseEntity<>("Product created successfully ", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> updateProduct(String id, String name, MultipartFile photo) throws IOException {
+    public ResponseEntity<String> updateProduct(String id, String name, MultipartFile image, double price, int quantity) throws IOException {
         Optional<Product> toUpdateProduct = productRepository.findById(id);
 
         if (toUpdateProduct.isPresent()) {
             Product updatedProduct = toUpdateProduct.get();
             updatedProduct.setName(name);
-            updatedProduct.setPhoto(ImageUtility.compressImage(photo.getBytes()));
+            updatedProduct.setPrice(price);
+            updatedProduct.setQuantity(quantity);
+            updatedProduct.setImage(ImageUtility.compressImage(image.getBytes()));
 
             productRepository.save(updatedProduct);
 
@@ -76,8 +80,8 @@ public class ProductService {
 
         return product.map(p -> ResponseEntity
                 .ok()
-                .contentType(MediaType.valueOf(p.getPhotoType()))
-                .body(ImageUtility.decompressImage(p.getPhoto()))
+                .contentType(MediaType.valueOf(p.getImageType()))
+                .body(ImageUtility.decompressImage(p.getImage()))
         ).orElse(null);
 
     }
