@@ -1,3 +1,4 @@
+FROM eclipse-temurin:17-jdk-alpine
 FROM mongo:4.2
 VOLUME /tmp
 COPY target/*.jar app.jar
