@@ -9,6 +9,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class MainController {
     @GetMapping("")
     public String hone() {
-        return "StockUp Api";
+        return """
+                <h1>   StockUp Api </h1>
+                  <h3> /products to get all <a href="/products">products</a> </h3>
+                  <br>
+                  <h3>/id/{id} to get product by id</h3>
+                  <br>
+                  <h3>/add to add product</h3>
+                  <br>
+                  <h3>/update to update product</h3>
+                  <br>
+                  <h3>/delete to delete product</h3>
+                  
+                  
+                   """;
     }
 }
