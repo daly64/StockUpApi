@@ -18,9 +18,7 @@ public class Product {
     @Id
     private String id;
     private String name;
-    private double price;
     private int quantity;
-    private byte[] photo;
-    private String photoType;
+
 
 }

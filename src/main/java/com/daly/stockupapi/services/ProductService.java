@@ -2,15 +2,11 @@ package com.daly.stockupapi.services;
 
 import com.daly.stockupapi.entities.Product;
 import com.daly.stockupapi.repositories.ProductRepository;
-import com.daly.stockupapi.util.ImageUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,27 +28,22 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public ResponseEntity<String> addProduct(String name, MultipartFile photo, double price, int quantity) throws IOException {
+    public ResponseEntity<String> addProduct(Product product) {
         Product newProduct = Product.builder()
-                .name(name)
-                .price(price)
-                .quantity(quantity)
-                .photo(ImageUtility.compressImage(photo.getBytes()))
-                .photoType(photo.getContentType())
+                .name(product.getName())
+                .quantity(product.getQuantity())
                 .build();
         productRepository.save(newProduct);
         return new ResponseEntity<>("Product created successfully ", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> updateProduct(String id, String name, MultipartFile photo, double price, int quantity) throws IOException {
-        Optional<Product> toUpdateProduct = productRepository.findById(id);
+    public ResponseEntity<String> updateProduct(Product product) {
+        Optional<Product> toUpdateProduct = productRepository.findById(product.getId());
 
         if (toUpdateProduct.isPresent()) {
             Product updatedProduct = toUpdateProduct.get();
-            updatedProduct.setName(name);
-            updatedProduct.setPrice(price);
-            updatedProduct.setQuantity(quantity);
-            updatedProduct.setPhoto(ImageUtility.compressImage(photo.getBytes()));
+            updatedProduct.setName(product.getName());
+            updatedProduct.setQuantity(product.getQuantity());
 
             productRepository.save(updatedProduct);
 
@@ -64,8 +55,8 @@ public class ProductService {
     }
 
 
-    public ResponseEntity<String> deleteProduct(String id) {
-        Optional<Product> toDeleteProduct = productRepository.findById(id);
+    public ResponseEntity<String> deleteProduct(Product product) {
+        Optional<Product> toDeleteProduct = productRepository.findById(product.getId());
 
         if (toDeleteProduct.isPresent()) {
             productRepository.delete(toDeleteProduct.get());
@@ -74,15 +65,4 @@ public class ProductService {
         return new ResponseEntity<>("no product to delete", HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<byte[]> getProductPhoto(String name) {
-
-        Optional<Product> product = productRepository.findByName(name);
-
-        return product.map(p -> ResponseEntity
-                .ok()
-                .contentType(MediaType.valueOf(p.getPhotoType()))
-                .body(ImageUtility.decompressImage(p.getPhoto()))
-        ).orElse(null);
-
-    }
 }
